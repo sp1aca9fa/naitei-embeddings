@@ -8,7 +8,7 @@ def cosine(a: np.ndarray, b: np.ndarray) -> float:
     """
     return float(np.dot(a, b))
 
-def print_cosine(sentences: list, name: str, embeddings: list) -> None:
+def print_cosine(sentences: list, name: str, embeddings: np.ndarray) -> None:
     """
     Print the cosine of each sentence against the entire setences list in matrix format with headers to help visualization.
     """
@@ -32,7 +32,7 @@ def print_cosine(sentences: list, name: str, embeddings: list) -> None:
 
 def main() -> None:
     """
-    Using print_cosine, trints the cosine of a sentence against the entire sentences list as calculates by 2 different models.
+    Using print_cosine, prints the cosine of a sentence against the entire sentences list as calculates by 2 different models.
     """
     model1 = SentenceTransformer("all-MiniLM-L6-v2")
     model2 = SentenceTransformer("intfloat/multilingual-e5-base")
@@ -61,9 +61,9 @@ def main() -> None:
 
     # embeddings_intfloat = model2.encode(list(map(lambda s: "query: " + s, sentences)))
 
-    # embeddings_intfloat = model2.encode(
-    #     [f"query: {s}" for s in sentences]
-    # )
+    embeddings_intfloat = model2.encode(
+        [f"query: {s}" for s in sentences]
+    )
 
     print_cosine(sentences, "all-MiniLM-L6-v2", embeddings_all_mini)
     print_cosine(sentences, "intfloat/multilingual-e5-base", embeddings_intfloat)

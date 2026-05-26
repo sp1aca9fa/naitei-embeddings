@@ -22,7 +22,7 @@ def print_results(query: str, k: int) -> None:
 
 def main() -> None:
     """
-    Using doc calculation (query @ candidates), evaluates queries against candidates and print top 3 candidates for each query.
+    Using dot calculation/dot product (query @ candidates), evaluates queries against candidates and print top 3 candidates for each query.
     """
     queries = [
         "React frontend developer",
