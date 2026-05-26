@@ -228,13 +228,21 @@ Every core chapter MUST follow this structure. Deviation requires the user's exp
 
 [2-4 small, focused code examples illustrating the concepts. These are NOT the user's solution. They demonstrate what the tools do. Each example should have a short "input → output" demonstration.]
 
-## Your task
+## Your tasks
 
-[The exercise. Clear, specific, narrow. The user writes this code themselves in `/src` or wherever the chapter directs. Spell out:
+Every core chapter has at least two exercises. The user writes the code himself in `/src`, `/scripts`, or wherever the chapter directs. Throwaway exploration scripts under `/scripts` are kept as a record of the learning process.
+
+### Exercise 1: Replication
+
+[A first exercise where the user writes code similar to what the chapter just taught. Spell out:
 - What files to create or modify
 - What functions/classes to write
 - What behavior is expected
 - How to verify it works (a one-line test, or a curl command, or similar)]
+
+### Exercise 2: Application
+
+[A second exercise where the user must use the chapter's concept to produce an intermediate result and then use that result to reach a final answer. May be unrelated to the FastAPI service being built. Same level of detail as Exercise 1.]
 
 ## Common pitfalls
 
@@ -270,8 +278,9 @@ Every core chapter MUST follow this structure. Deviation requires the user's exp
 ## Checkpoint
 
 Before moving to Chapter N+1, you should have:
-- [ ] [Concrete deliverable 1]
-- [ ] [Concrete deliverable 2]
+- [ ] [Concrete deliverable from Exercise 1]
+- [ ] [Concrete deliverable from Exercise 2]
+- [ ] [Any conceptual takeaways the user should have internalized]
 - [ ] Code committed to your repo
 ```
 
