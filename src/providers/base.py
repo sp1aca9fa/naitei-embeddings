@@ -1,4 +1,5 @@
-from abc import ABC, abstractmethodd
+from abc import ABC, abstractmethod
+import numpy as np
 
 class EmbeddingProvider(ABC):
     @property
@@ -12,5 +13,5 @@ class EmbeddingProvider(ABC):
         """Return the dimension of the provider"""
 
     @abstractmethod
-    def embed(texts: list[str]) -> np.ndarray:
+    def embed(self, texts: list[str]) -> np.ndarray:
         """Return the vector of the embed list of strings"""

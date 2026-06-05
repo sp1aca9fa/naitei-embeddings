@@ -1,4 +1,4 @@
-from base import EmbeddingProvider
+from .base import EmbeddingProvider
 import hashlib
 import numpy as np
 
@@ -9,16 +9,21 @@ def _seed_from_text(text: str) -> int:
 
 class MockProvider(EmbeddingProvider):
     def __init__(self, dimension: int):
-        self.dimension = dimension
+        self._dimension = dimension
 
-    def name(self):
+    @property
+    def name(self) -> str:
         return "mock"
 
-    def dimension(self):
-        return self.dimension
+    @property
+    def dimension(self) -> int:
+        return self._dimension
 
-    def embed(self, texts):
-        rng = np.random.default_rng(_seed_from_text(texts))
-        vec = rng.standard_normal(dimension)
-        vec /= np.linalg.norm(vec)
-        return vec
+    def embed(self, texts: list[str]) -> np.ndarray:
+        vectors = []
+        for t in texts:
+            rng = np.random.default_rng(_seed_from_text(t))
+            vec = rng.standard_normal(self.dimension)
+            vec /= np.linalg.norm(vec)
+            vectors.append(vec)
+        return np.array(vectors)
