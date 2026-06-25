@@ -226,11 +226,13 @@ Every core chapter MUST follow this structure. Deviation requires the user's exp
 
 ## Code examples
 
-[2-4 small, focused code examples illustrating the concepts. These are NOT the user's solution. They demonstrate what the tools do. Each example should have a short "input → output" demonstration.]
+[2-4 small, focused code examples illustrating the concepts. These are NOT the user's solution. They demonstrate what the tools do. Each example should have a short "input → output" demonstration.
+
+Minimize handed-out code, even for new concepts. Keep these examples at the concept level on throwaway/toy structures (a fake `items` table, an `Animal` class, etc.) rather than on the chapter's actual project files, so the user still has to write the real code himself in the exercises. Push fuller, closer-to-the-solution skeletons down into the collapsible "Stuck? Hints" section, where they serve as a safety net the user opts into, rather than the first thing he reads.]
 
 ## Your tasks
 
-Every core chapter has at least two exercises. The user writes the code himself in `/src`, `/scripts`, or wherever the chapter directs. Throwaway exploration scripts under `/scripts` are kept as a record of the learning process.
+Every core chapter has at least two hands-on coding exercises, and both Exercise 1 and Exercise 2 must be the user writing code that directly applies what the chapter just taught. Testing is NOT the default second exercise; it is an occasional, optional Exercise 3 (see below). The user writes the code himself in `/src`, `/scripts`, or wherever the chapter directs. Throwaway exploration scripts under `/scripts` are kept as a record of the learning process.
 
 ### Exercise 1: Replication
 
@@ -242,7 +244,11 @@ Every core chapter has at least two exercises. The user writes the code himself 
 
 ### Exercise 2: Application
 
-[A second exercise where the user must use the chapter's concept to produce an intermediate result and then use that result to reach a final answer. May be unrelated to the FastAPI service being built. Same level of detail as Exercise 1.]
+[A second exercise where the user must use the chapter's concept to produce an intermediate result and then use that result to reach a final answer. This is still hands-on coding of the chapter's concept, not a test-writing exercise. May be unrelated to the FastAPI service being built. Same level of detail as Exercise 1.]
+
+### Exercise 3 (optional, occasional): Tests or extension
+
+[Include only when it fits naturally and hermetically. Either a test-writing exercise (when the chapter produced something testable without external dependencies) or a small coding extension/refactor that deepens the chapter's concept. Mark it clearly as optional and not required to proceed. Skip it entirely for chapters where it would be forced (for example, a layer that can only be tested against a live external service, which the dedicated testing chapter covers later).]
 
 ## Common pitfalls
 
@@ -342,6 +348,7 @@ When you DO write code (in examples and hint scaffolding), follow these:
 When explaining things:
 - Don't over-explain basics he already knows (loops, functions, OOP fundamentals).
 - DO explain Python-specific idioms when they appear (decorators, context managers, async, list/dict comprehensions if used in non-obvious ways).
+- DO add short, focused asides on non-basic Python ecosystem mechanics that are not the chapter's topic but that he will hit anyway: imports (absolute vs relative), packages and `__init__.py`, circular imports, `sys.path` and script-vs-module execution, virtualenvs, etc. He got stuck on multi-file structure and imports in Chapter 3 (his first Python app spanning more than two files). Flag the likely gotcha proactively rather than waiting for him to trip on it. Keep these asides tight; do not turn the guide into a Python textbook.
 - DO explain every new library and every new concept the first time it appears.
 - DO connect ideas to his existing knowledge: "this is like Express middleware but for FastAPI" lands well; "this is like a Rails service object" lands well.
 
