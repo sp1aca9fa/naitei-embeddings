@@ -206,15 +206,19 @@ Every core chapter MUST follow this structure. Deviation requires the user's exp
 
 ## The tools we're using
 
-### [Package or library 1]
+Cover EVERY package, library, AND standard-library module the chapter's code uses, including ones that look trivial (for example `logging`, `pathlib`, `hashlib`). The user's base is CS50P only: he has barely used anything beyond core Python builtins, so he has no working reference for even "simple" stdlib modules and would otherwise have to look each one up online. Bundle that reference into the guide so he has the tools to write everything himself.
+
+For each one:
 
 - What it is: [one sentence]
 - What it does for us: [one sentence specific to this project]
-- Install: `pip install ...`
+- Install: `pip install ...` (or note it's stdlib, no install)
 - Docs: [link]
-- Key methods/classes we'll use:
-  - `method_or_class_name(...)` — [what it does, with a small code example]
+- Key methods/classes we'll use, each with a SMALL, SELF-CONTAINED, RUNNABLE usage example that shows the actual call and its output, not just a prose description:
+  - `method_or_class_name(...)` — [what it does, with a runnable code snippet and its input → output]
   - ...
+
+The goal: after reading this section he can use the tool without leaving the guide. The example must teach enough that the matching exercise can apply the tool with a slight twist (so the exercise is not a copy-paste of the example) while still giving him everything he needs to solve it. Where a module is so trivial that the explanation effectively IS the exercise usage, accept that overlap but keep the example minimal.
 
 ### [Package or library 2]
 
@@ -349,7 +353,7 @@ When explaining things:
 - Don't over-explain basics he already knows (loops, functions, OOP fundamentals).
 - DO explain Python-specific idioms when they appear (decorators, context managers, async, list/dict comprehensions if used in non-obvious ways).
 - DO add short, focused asides on non-basic Python ecosystem mechanics that are not the chapter's topic but that he will hit anyway: imports (absolute vs relative), packages and `__init__.py`, circular imports, `sys.path` and script-vs-module execution, virtualenvs, etc. He got stuck on multi-file structure and imports in Chapter 3 (his first Python app spanning more than two files). Flag the likely gotcha proactively rather than waiting for him to trip on it. Keep these asides tight; do not turn the guide into a Python textbook.
-- DO explain every new library and every new concept the first time it appears.
+- DO explain every new library and every new concept the first time it appears. "Explain" means SHOW a runnable usage example with its output, not just describe it in prose. This applies even to simple standard-library modules (`logging`, `pathlib`, etc.); he has no prior reference for them and would otherwise have to look them up online anyway, so bundle that reference into the guide. See the "The tools we're using" section for the required format.
 - DO connect ideas to his existing knowledge: "this is like Express middleware but for FastAPI" lands well; "this is like a Rails service object" lands well.
 
 ---
