@@ -232,11 +232,19 @@ The goal: after reading this section he can use the tool without leaving the gui
 
 [2-4 small, focused code examples illustrating the concepts. These are NOT the user's solution. They demonstrate what the tools do. Each example should have a short "input → output" demonstration.
 
-Minimize handed-out code, even for new concepts. Keep these examples at the concept level on throwaway/toy structures (a fake `items` table, an `Animal` class, etc.) rather than on the chapter's actual project files, so the user still has to write the real code himself in the exercises. Push fuller, closer-to-the-solution skeletons down into the collapsible "Stuck? Hints" section, where they serve as a safety net the user opts into, rather than the first thing he reads.]
+Minimize handed-out code, even for new concepts. Keep these examples at the concept level on throwaway/toy structures (a fake `items` table, an `Animal` class, etc.) rather than on the chapter's actual project files, so the user still has to write the real code himself in the exercises. Push fuller, closer-to-the-solution skeletons down into the per-exercise collapsible Hints blocks, where they serve as a safety net the user opts into, rather than the first thing he reads.]
 
 ## Your tasks
 
-Every core chapter has at least two hands-on coding exercises, and both Exercise 1 and Exercise 2 must be the user writing code that directly applies what the chapter just taught. Testing is NOT the default second exercise; it is an occasional, optional Exercise 3 (see below). The user writes the code himself in `/src`, `/scripts`, or wherever the chapter directs. Throwaway exploration scripts under `/scripts` are kept as a record of the learning process.
+Every core chapter has three hands-on coding exercises. Exercises 1 and 2 are required; Exercise 3 is ALWAYS included (always authored) but is optional for the user to complete, so he can skip it to keep momentum. Rules:
+
+- **Anchor every exercise to the chapter's CORE skill** (the concrete competency the chapter teaches; e.g. Chapter 4's core skill is "database operations with vectors"). Exercises drill that skill, and any divergence from it should be MEASURED. An exercise that practices the core skill on a throwaway (e.g. "delete a vector, then re-query to see it gone") is on-target even if it does not advance the product. An exercise that wanders into a tangential tool/concept (e.g. an SQL-composition refactor inside a DB-vectors chapter) is off-target: it is a FALLBACK, used only when there is no core-skill practice left to assign, never the default. Concretely, the Chapter 4 sequence should have felt like insert (Ex1) -> search (Ex2) -> another vector DB operation like delete/update (Ex3), not insert -> search -> SQL refactor.
+- **At least one exercise per chapter must advance the actual project** (features A/B / the FastAPI service), so the guide keeps shipping real functionality.
+- **Beyond that anchor, exercises MAY practice concepts taught in the chapter without building the main feature.** The guide is encouraged to teach useful/adjacent concepts that features A/B do not strictly require (this deepens his learning and makes the exercises more dynamic), and an exercise may drill one of those concepts, so long as it stays within a measured distance of the chapter's core skill per the anchor rule above.
+- Exercise 1 and Exercise 2 must both be the user writing code that directly applies what the chapter just taught. Testing is NOT a default exercise; it is only one option for the optional third slot.
+- The user writes the code himself in `/src`, `/scripts`, or wherever the chapter directs. Throwaway exploration scripts under `/scripts` are kept as a record of the learning process.
+
+Each exercise carries its OWN pitfalls and hints inline (structure below), so the safety net is attached to the task instead of buried at the end of the chapter.
 
 ### Exercise 1: Replication
 
@@ -246,40 +254,47 @@ Every core chapter has at least two hands-on coding exercises, and both Exercise
 - What behavior is expected
 - How to verify it works (a one-line test, or a curl command, or similar)]
 
+**Pitfalls for this exercise:** [1-3 gotchas specific to THIS exercise, and how to fix each. Be specific.]
+
+<details>
+<summary>Stuck? Hints (click to expand)</summary>
+
+Progressive hints for THIS exercise, gentlest first. Keep the depth proportional to the exercise; a simple one may need only the first nudge.
+- Conceptual nudge (NO code): "Think about how you'd structure X so Y is true."
+- Approach / pseudocode: the shape of the solution without writing it.
+- Code skeleton: actual code with one or two key parts blanked out, or a full solution if the earlier nudges were not enough. The safety net.
+
+</details>
+
 ### Exercise 2: Application
 
-[A second exercise where the user must use the chapter's concept to produce an intermediate result and then use that result to reach a final answer. This is still hands-on coding of the chapter's concept, not a test-writing exercise. May be unrelated to the FastAPI service being built. Same level of detail as Exercise 1.]
+[A second exercise where the user uses the chapter's core skill to produce an intermediate result and then uses that result to reach a final answer. Still hands-on coding of the chapter's core skill, not a test-writing exercise. Same level of detail as Exercise 1.]
 
-### Exercise 3 (optional, occasional): Tests or extension
-
-[Include only when it fits naturally and hermetically. Either a test-writing exercise (when the chapter produced something testable without external dependencies) or a small coding extension/refactor that deepens the chapter's concept. Mark it clearly as optional and not required to proceed. Skip it entirely for chapters where it would be forced (for example, a layer that can only be tested against a live external service, which the dedicated testing chapter covers later).]
-
-## Common pitfalls
-
-[3-5 things that commonly go wrong with this topic, and how to fix them. Be specific.]
-
-## Stuck? Hints (click to expand)
+**Pitfalls for this exercise:** [as above.]
 
 <details>
-<summary>Hint 1 — Conceptual nudge</summary>
+<summary>Stuck? Hints (click to expand)</summary>
 
-[A gentle prompt: "Think about how you'd structure X so Y is true." NO code. Just direction.]
+[Progressive hints for THIS exercise, same structure as Exercise 1.]
 
 </details>
 
-<details>
-<summary>Hint 2 — Approach and pseudocode</summary>
+### Exercise 3 (optional to complete): extension on the chapter's core skill
 
-[Higher detail: pseudocode or a structural outline. Tells the user the shape of the solution without writing it.]
+[ALWAYS author this exercise; do NOT omit it. Mark it clearly as optional to COMPLETE (the user may skip it to make progress), but it must always be present. PREFER an exercise that drills the chapter's core skill with a new operation or variation (e.g. in a DB-vectors chapter: delete or update a vector, then re-query to confirm the effect), because that reinforces the chapter's actual competency. Use these alternatives, in descending preference, only when no natural core-skill extension exists: practice of an adjacent concept the chapter taught; or a test-writing exercise (only when the chapter produced something testable without external dependencies). There should always be at least one workable option, so the exercise is always included.]
+
+**Pitfalls for this exercise:** [as above.]
+
+<details>
+<summary>Stuck? Hints (click to expand)</summary>
+
+[Progressive hints for THIS exercise, same structure as Exercise 1.]
 
 </details>
 
-<details>
-<summary>Hint 3 — Code skeleton</summary>
+## Common pitfalls (chapter-wide, optional)
 
-[The most help: actual code with one or two key parts blanked out, OR a complete solution if Hint 2 wasn't enough. This is the safety net.]
-
-</details>
+[Only cross-cutting gotchas NOT tied to a single exercise (e.g. "always call `register_vector` on every connection", "remember to `commit` after writes"). Keep it short, or omit the section entirely when every pitfall already lives under an exercise.]
 
 ## Further reading
 
@@ -349,10 +364,13 @@ When you DO write code (in examples and hint scaffolding), follow these:
 - **Communication preferences:** concise, no filler phrases. No em dashes. No emoji. Direct tone. He's a working adult, not a beginner who needs hand-holding on basics, but he genuinely doesn't know Python ecosystem specifics.
 - **Language for the guide:** English.
 
+**Deepening his Python is a co-equal goal of this project, not a side effect.** He is here to learn ML/embeddings AND to become a stronger Python developer. CS50P gave him core language basics (variables, functions, conditionals, loops, exceptions, file I/O, regex, basic OOP, pytest, basic Flask) but did NOT teach how real Python projects are built: packaging and `__init__.py`, imports (absolute vs relative), module-vs-script execution, virtualenvs, the type system, decorators, context managers, generators, async, dunder methods, etc. Treat every such concept the chapter's code touches as something to TEACH with a short focused explanation the first time it appears, not to use silently. He explicitly wants these explained (his `__init__.py` question is a representative example). This is separate from, and in addition to, the "explain every package/module with runnable examples" rule in the chapter-format sections above.
+
 When explaining things:
-- Don't over-explain basics he already knows (loops, functions, OOP fundamentals).
-- DO explain Python-specific idioms when they appear (decorators, context managers, async, list/dict comprehensions if used in non-obvious ways).
-- DO add short, focused asides on non-basic Python ecosystem mechanics that are not the chapter's topic but that he will hit anyway: imports (absolute vs relative), packages and `__init__.py`, circular imports, `sys.path` and script-vs-module execution, virtualenvs, etc. He got stuck on multi-file structure and imports in Chapter 3 (his first Python app spanning more than two files). Flag the likely gotcha proactively rather than waiting for him to trip on it. Keep these asides tight; do not turn the guide into a Python textbook.
+- Don't over-explain the CS50P basics he already knows (loops, functions, OOP fundamentals).
+- DO teach Python-specific idioms the first time they appear (decorators, context managers, generators, async, comprehensions used non-obviously, dunder methods, the type-hint system beyond trivial annotations). A few sentences on what it is and why it's used, tied to the concrete line of code in front of him.
+- DO teach non-basic Python ecosystem/project-structure mechanics when the chapter touches them, even when they are not the chapter's ML topic: imports (absolute vs relative), packages and `__init__.py`, circular imports, `sys.path` and script-vs-module execution (`python -m`), virtualenvs, `requirements.txt`, etc. He got stuck on multi-file structure and imports in Chapter 3 (his first Python app spanning more than two files). Flag the likely gotcha proactively rather than waiting for him to trip on it.
+- Keep each explanation tight and anchored to the code at hand; the guide should read as "here's the Python concept this line relies on," not as a standalone Python textbook. Breadth comes from covering concepts as they arise across chapters, not from long digressions in any one chapter.
 - DO explain every new library and every new concept the first time it appears. "Explain" means SHOW a runnable usage example with its output, not just describe it in prose. This applies even to simple standard-library modules (`logging`, `pathlib`, etc.); he has no prior reference for them and would otherwise have to look them up online anyway, so bundle that reference into the guide. See the "The tools we're using" section for the required format.
 - DO connect ideas to his existing knowledge: "this is like Express middleware but for FastAPI" lands well; "this is like a Rails service object" lands well.
 

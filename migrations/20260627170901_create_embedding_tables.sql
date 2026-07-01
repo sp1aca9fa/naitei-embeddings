@@ -19,11 +19,11 @@ CREATE TABLE cv_bullet_embeddings (
 );
 
 CREATE TABLE cv_sentence_embeddings (
-    id uuid PRIMARY KEY DEFAUL
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     parent_bullet_id uuid NOT NULL REFERENCES cv_bullet_embeddings(id),
     source_text text NOT NULL,
     embedding vector(768) NOT NULL,
-    model_name varchar(255) NO
+    model_name varchar(255) NOT NULL,
     created_at timestamptz DEFAULT now()
 );
 
