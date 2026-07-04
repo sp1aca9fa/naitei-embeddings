@@ -7,3 +7,4 @@ pytest==9.0.3
 psycopg2-binary==2.9.12
 pgvector==0.4.2
 supabase==2.31.0
+pysbd==0.3.4

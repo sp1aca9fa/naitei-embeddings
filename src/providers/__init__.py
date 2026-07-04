@@ -2,7 +2,7 @@ from .base import EmbeddingProvider
 from .mock import MockProvider
 from .huggingface import HuggingFaceProvider
 from .openai import OpenAIProvider
-from src import config
+from .. import config
 
 def get_provider() -> EmbeddingProvider:
     if config.embedding_provider == "mock":

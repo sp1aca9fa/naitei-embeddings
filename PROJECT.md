@@ -211,14 +211,19 @@ Cover EVERY package, library, AND standard-library module the chapter's code use
 For each one:
 
 - What it is: [one sentence]
-- What it does for us: [one sentence specific to this project]
+- What we're trying to achieve with it: [what concrete outcome, in plain language, before any code — e.g. "validate the shape of incoming JSON so bad requests fail fast with a clear error, instead of crashing deep in our match logic"]
+- Why it's needed for this project specifically: [not just what the tool does in general, but why THIS project needs it, tied to features A/B or the architecture]
+- Quick comparison with alternatives: [1-3 sentences on what else could have been used and why this one was picked, e.g. "FastAPI vs Flask: Flask needs a separate library bolted on for validation; FastAPI bakes it in via Pydantic" — this is what lets him picture the tradeoff, not just accept a fait accompli]
+- How it fits into our code: [where in the request/response/data flow this tool's output plugs in, described in prose — what feeds it, what it hands off to next]
 - Install: `pip install ...` (or note it's stdlib, no install)
 - Docs: [link]
 - Key methods/classes we'll use, each with a SMALL, SELF-CONTAINED, RUNNABLE usage example that shows the actual call and its output, not just a prose description:
   - `method_or_class_name(...)` — [what it does, with a runnable code snippet and its input → output]
   - ...
 
-The goal: after reading this section he can use the tool without leaving the guide. The example must teach enough that the matching exercise can apply the tool with a slight twist (so the exercise is not a copy-paste of the example) while still giving him everything he needs to solve it. Where a module is so trivial that the explanation effectively IS the exercise usage, accept that overlap but keep the example minimal.
+The goal: after reading this section he should already be able to picture what the exercise is going to have him build and why, before he opens the exercise. He should never reach the exercise instructions confused about what the tool is for or how it connects to the project; the exercise should feel like "apply what I now understand" rather than "the first place I understood this." The runnable examples still need to teach enough that the matching exercise can apply the tool with a slight twist (so the exercise is not a copy-paste of the example) while still giving him everything he needs to solve it. Where a module is so trivial that the explanation effectively IS the exercise usage, accept that overlap but keep the example minimal.
+
+**Completeness check (mandatory, do this before finalizing the chapter):** walk through the exercise's expected solution step by step, and confirm every operation it requires was actually taught somewhere in "Concepts," "The tools we're using," or "How it fits together" — not just the main library calls, but manipulation of their output too (e.g. if the exercise needs per-row or per-column access into a matrix/array, that indexing operation must be explicitly shown with a runnable example before the exercise, not left implicit in a one-line mention). If a needed operation isn't covered yet, add a short concept/tool entry for it rather than relying on the exercise or hints to introduce it for the first time. The chapter's job is to make sure he HAS every tool needed to reach the solution himself; the exercise's job is to make him assemble them, not to discover a missing one.
 
 ### [Package or library 2]
 
@@ -243,8 +248,15 @@ Every core chapter has three hands-on coding exercises. Exercises 1 and 2 are re
 - **Beyond that anchor, exercises MAY practice concepts taught in the chapter without building the main feature.** The guide is encouraged to teach useful/adjacent concepts that features A/B do not strictly require (this deepens his learning and makes the exercises more dynamic), and an exercise may drill one of those concepts, so long as it stays within a measured distance of the chapter's core skill per the anchor rule above.
 - Exercise 1 and Exercise 2 must both be the user writing code that directly applies what the chapter just taught. Testing is NOT a default exercise; it is only one option for the optional third slot.
 - The user writes the code himself in `/src`, `/scripts`, or wherever the chapter directs. Throwaway exploration scripts under `/scripts` are kept as a record of the learning process.
+- **Exercise instructions describe requirements in prose, never in literal code.** State what a field represents and its constraint in words ("the request needs the CV bullets as a list of strings, and the JD's language, defaulting to English"), not as a signature he can copy-paste ("`cv_bullets: list[str]`", "`jd_language: str = \"en\"`"). Same for function signatures, class shapes, endpoint decorators: describe the behavior and constraints, not the syntax. This applies to the exercise body itself. It does NOT apply to the "Stuck? Hints" block, where an actual code skeleton is expected as the final, most-revealing nudge — that is the intended safety net, and the point is he has to open it to see real code instead of finding it already in the instructions.
 
 Each exercise carries its OWN pitfalls and hints inline (structure below), so the safety net is attached to the task instead of buried at the end of the chapter.
+
+**Difficulty reference (mandatory calibration for every chapter).** A "gap" is a point in the exercise's solution that the chapter's guide does NOT hand him directly — a step he must reason out himself rather than copy the shape of from an example.
+
+- **Exercise 1 (Fixate):** follows the shape of what the chapter's examples already demonstrated — one tool, one pattern, applied directly, not combined with others in a new way. Contains exactly ~2 gaps: small stretches not explicitly shown (a check, an edge case, a minor transformation). Overall feel: easy, with two moments to stop and think.
+- **Exercise 2 (Apply):** requires combining 2+ concepts/tools from the chapter in a way the chapter's own examples didn't already show combined. Contains ~3 gaps, each sitting at a seam between the combined concepts rather than inside a single pattern. Overall feel: noticeably harder than Exercise 1, because the combining itself is the difficulty, not just the individual gaps.
+- **Exercise 3 (Apply, optional to complete):** same shape as Exercise 2 (combine 2+ concepts, ~3 gaps), pitched slightly above it — either one more combination, or gaps that require noticing something (an edge case, a tradeoff) rather than just filling in a step.
 
 ### Exercise 1: Replication
 
@@ -260,8 +272,8 @@ Each exercise carries its OWN pitfalls and hints inline (structure below), so th
 <summary>Stuck? Hints (click to expand)</summary>
 
 Progressive hints for THIS exercise, gentlest first. Keep the depth proportional to the exercise; a simple one may need only the first nudge.
-- Conceptual nudge (NO code): "Think about how you'd structure X so Y is true."
-- Approach / pseudocode: the shape of the solution without writing it.
+- Tool-usage guidance (NO pseudocode, NO code): plain-text walkthrough of which tools/functions from this chapter to use and in what order, e.g. "split the text into sentences with the sentence-splitting library, embed the two groups separately, compare them the way the chapter showed, then figure out how to look at one requirement's scores at a time before deciding what counts as a good match." This should point at the shape of the solution (including any step the "Concepts" or "Tools" sections might not have made obvious was needed, like operating on a single row/column at a time) without naming variables, functions, or syntax.
+- Approach / pseudocode: now give pseudocode, but keep it deliberately looser than the real code, not a near-transliteration of it. It should read like a rough sketch a person would jot on paper (e.g. "for each requirement: grab its scores, find the best ones, check if any is good enough"), not something with real function names, real data structures, or a shape that maps 1:1 onto the actual implementation. It must still clearly lead to the correct solution structure, including any control flow (loops, conditionals) the exercise actually needs; do not omit a step just because it's easy to forget to mention.
 - Code skeleton: actual code with one or two key parts blanked out, or a full solution if the earlier nudges were not enough. The safety net.
 
 </details>
