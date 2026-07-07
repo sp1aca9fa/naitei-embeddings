@@ -4,6 +4,25 @@
 
 You will make `/match` stop re-embedding the same text on every request. Instead, before embedding a CV bullet or a JD requirement sentence, your code will check the database for an embedding of that exact text under the current provider, reuse it if found, and only call the provider (and store the result) the first time that text is ever seen. By the end, calling `/match` twice with the same CV and JD costs one embedding pass, not two.
 
+## Quick recall check
+
+Before diving in, answer these without looking back. They're not new material, just a check that older concepts are still solid.
+
+1. Chapter 1: why do we use cosine similarity instead of Euclidean distance to compare embeddings?
+2. Chapter 2: why does embedding Japanese text with an English-only model fail to produce useful results?
+3. Chapter 4: what's the practical reason HNSW was chosen over IVFFlat for this project's indexing?
+
+<details>
+<summary>Check your answers</summary>
+
+1. Cosine similarity measures the angle between vectors, not their magnitude, so it captures "pointing the same direction" (same meaning) regardless of vector length. Euclidean distance is sensitive to magnitude, which doesn't track meaning the same way.
+2. English-only models were never trained on Japanese text, so Japanese tokens either fall outside the model's learned vocabulary or get embedded without any meaningful structure — the resulting vectors don't cluster near their English equivalents.
+3. HNSW gives better query performance at this project's scale without needing a large, carefully-tuned dataset first (unlike IVFFlat, which needs enough data to build good clusters to be effective).
+
+</details>
+
+If any felt shaky, skim the referenced chapter before continuing.
+
 ## Why this matters
 
 Chapter 5 built `/match` fully in memory: every request re-embeds every CV bullet and every JD requirement sentence from scratch, even if you sent the exact same CV five minutes ago. That is fine for a chapter about getting the logic right. It is not fine for a real service. Under the `huggingface` provider, embedding is a local model forward pass, so redundant calls cost latency. Under `openai`, redundant calls cost real money on every single request, for text you already paid to embed once. A user re-checking their match against the same job posting, or an interface that calls `/match` repeatedly as someone edits one bullet, would otherwise re-embed everything else that did not change.
@@ -368,12 +387,31 @@ confirm there are two rows, with two different model_name values
 
 </details>
 
+### Exercise 4 (retrieval): recall Chapter 2's prefix quirk
+
+This one is not about caching. It is a quick memory check on something from two chapters back that this chapter does not touch at all.
+
+**What to do:** without re-reading Chapter 2, write down (a comment in a scratch file is fine) your answer to this: the `multilingual-e5-base` model needs a `"query: "` or `"passage: "` prefix depending on which side of a comparison a piece of text is on. Given that `/match` now embeds CV bullets and JD requirement sentences separately, through the same get-or-create path, which side should get which prefix, and why does it matter for the similarity scores to come out meaningful? Do not look this up until after you've written your answer.
+
+**Pitfalls for this exercise:** none specific. If you genuinely cannot recall this at all, that is fine, it means it is worth skimming Chapter 2's section on the prefix again before moving on. Don't treat this as a race to get right without checking.
+
+<details>
+<summary>Stuck? Hints (click to expand)</summary>
+
+Skim Chapter 2's section on the E5 model's `query:` / `passage:` prefix requirement, then come back and answer without the page open.
+
+</details>
+
 ## Common pitfalls
 
 1. **Treating the (text, model) pair as (text) alone.** If your lookup query only filters on `content_hash`, switching providers returns stale vectors from the wrong model instead of a fresh embedding. Always filter on both.
 2. **No unique index, so nothing actually enforces the invariant your Python code assumes.** Your read-then-write logic can still race or bug its way into duplicates; the unique index is a backstop, not just documentation.
 3. **Losing list order when converting cache-hit/cache-miss results back into a matrix.** The matrix math has no way to tell you the order is wrong; it just silently produces a matrix that scores the wrong bullet against the wrong requirement. Verify order explicitly with a known small example before trusting it on real input.
 4. **Hashing a Python string directly instead of encoded bytes.** `hashlib.sha256("text")` raises a `TypeError`; you need `.encode("utf-8")` first.
+
+## Explain it back
+
+In a few sentences, no code: why does the cache key need to be (text, model name) together, rather than just a hash of the text? What would actually go wrong, concretely, if you dropped model name from the key?
 
 ## Further reading
 
@@ -391,5 +429,7 @@ Before moving to Chapter 7, you should have:
 - [ ] `/match` using that helper for both CV bullets and JD requirements, with the matrix math otherwise unchanged from Chapter 5
 - [ ] Verified that calling `/match` twice with identical input adds zero new rows the second time
 - [ ] Verified that the same text under two different providers produces two distinct rows, correctly scoped by `model_name`
+- [ ] Your own answer (checked against Chapter 2) on which side of `/match` needs which E5 prefix, and why
 - [ ] An understanding of why content-addressing makes cache invalidation free, and why the model name has to be part of the key
+- [ ] Written answer to the "Explain it back" prompt
 - [ ] Code committed to your repo

@@ -1,4 +1,6 @@
 import logging
+import hashlib
+import uuid
 
 import numpy as np
 import psycopg2
@@ -6,6 +8,7 @@ from pgvector.psycopg2 import register_vector
 from psycopg2 import sql
 
 from src import config
+from src.providers import get_provider
 
 logger = logging.getLogger(__name__)
 
@@ -22,67 +25,81 @@ def get_connection() -> psycopg2.extensions.connection:
     logger.debug("connected to database")
     return conn
 
+def text_to_hash(text: str) -> str:
+    return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
-def insert_embedding(table_name: str, ref_id: str, source_text: str, embedding: np.ndarray, model_name: str) -> str:
+
+def insert_embedding(table_name: str, ref_id: str, source_text: str, embedding: np.ndarray, model_name: str, content_hash: str) -> np.ndarray | None:
     """
     Store an embedding to the specified table.
     ref_id is job_id on job_embeddings table, cv_version_id on cv_bullet_embeddings table and parent_bullet_id on cv_sentence_embeddings table
     """
     if table_name not in ID_COLUMNS:
         raise ValueError(f"Unknown table {table_name}")
-    conn = get_connection()
     query = sql.SQL(
-        "INSERT INTO {table} (source_text, embedding, model_name, {id_col}) "
-        "VALUES (%s, %s, %s, %s) RETURNING id"
+        "INSERT INTO {table} (source_text, embedding, model_name, content_hash, {id_col}) "
+        "VALUES (%s, %s, %s, %s, %s) ON CONFLICT DO NOTHING RETURNING embedding"
     ).format(
         table=sql.Identifier(table_name),
         id_col=sql.Identifier(ID_COLUMNS[table_name])
     )
+    conn = get_connection()
     try:
         with conn.cursor() as cur:
             cur.execute(
-                query, (source_text, embedding, model_name, ref_id),
+                query, (source_text, embedding, model_name, content_hash, ref_id),
             )
-            new_id = cur.fetchone()[0]
+            embedding = cur.fetchone()[0]
         conn.commit()
-        logger.info("inserted row for %s %s", table_name, ref_id)
-        return new_id
+        logger.info("inserted row to %s, hash %s", table_name, content_hash)
+        return embedding
     finally:
         conn.close()
         logger.debug("connection closed")
 
 
-def get_embedding(table_name: str, row_id: str) -> tuple[str, np.ndarray] | None:
-    """Fetch the content and embedding for one row by id."""
+def get_embedding(table_name: str, content_hash: str, model_name: str) -> np.ndarray | None:
+    """Fetch the content and embedding for one row by text hash and model name."""
     if table_name not in ID_COLUMNS:
         raise ValueError(f"Unknown table {table_name}")
-    conn = get_connection()
     query = sql.SQL(
-        "SELECT source_text, embedding FROM {table} WHERE id = %s"
+        "SELECT embedding FROM {table} WHERE content_hash = %s AND model_name = %s"
     ).format(
         table=sql.Identifier(table_name)
     )
+    conn = get_connection()
     try:
         with conn.cursor() as cur:
             cur.execute(
                 query,
-                (row_id,),
+                (content_hash, model_name),
             )
             if row := cur.fetchone():
                 logger.info("successfully fetched data")
-                return row[0], row[1]
-            logger.info("no data found on %s with id %s", table_name, row_id)
+                return row[0]
+            logger.info("no data found on %s with hash %s", table_name, content_hash)
             return None
     finally:
         conn.close()
         logger.debug("connection closed")
+
+def get_or_create_embedding(table_name: str, text: str, model_name: str) -> np.ndarray:
+    """Fetches the vector from the DB or inserts a new entry and returns the vector from the new entry."""
+    if table_name not in ID_COLUMNS:
+        raise ValueError(f"Unknown table {table_name}")
+    content_hash = text_to_hash(text)
+    existing = get_embedding(table_name, content_hash, model_name)
+    if existing is not None:
+        return existing
+    provider = get_provider()
+    vec = provider.embed([text])
+    return insert_embedding(table_name, str(uuid.uuid4()), text, vec, model_name, content_hash)
 
 
 def search_embedding(table_name: str, query_vec: np.ndarray, n: int) -> list[tuple]:
     """Search the database for a query vector and return a list of rows in descending order of text similarity"""
     if table_name not in ID_COLUMNS:
         raise ValueError(f"Unknown table {table_name}")
-    conn = get_connection()
     query = sql.SQL(
         """
         SELECT source_text, model_name, 1 - (embedding <=> %s) AS similarity
@@ -93,6 +110,7 @@ def search_embedding(table_name: str, query_vec: np.ndarray, n: int) -> list[tup
     ).format(
         table=sql.Identifier(table_name)
     )
+    conn = get_connection()
     try:
         with conn.cursor() as cur:
             cur.execute(
