@@ -3,7 +3,8 @@ from pydantic import BaseModel, Field
 import pysbd
 import numpy as np
 
-from .providers import get_provider
+from src.providers import get_provider
+from src.db import get_or_create_embedding
 
 app = FastAPI()
 
@@ -35,6 +36,7 @@ class MatchResponse(BaseModel):
     coverage_gaps: list[str]
     requirements: list[RequirementMatch]
 
+provider = get_provider()
 
 @app.post("/match", response_model=MatchResponse)
 def match(req: MatchRequest) -> MatchResponse:
@@ -45,9 +47,9 @@ def run_match(cv_bullets, jd_text, jd_language, threshold, top_n) -> MatchRespon
     seg = pysbd.Segmenter(language=jd_language, clean=False)
     requirements = [s.strip() for s in seg.segment(jd_text)]
 
-    provider = get_provider()
-    bullet_vecs = provider.embed(cv_bullets)
-    req_vecs = provider.embed(requirements)
+    bullet_vecs = np.array([get_or_create_embedding("cv_bullet_embeddings", bullet, provider) for bullet in cv_bullets])
+
+    req_vecs = np.array([get_or_create_embedding("job_embeddings", req, provider) for req in requirements])
     matrix = bullet_vecs @ req_vecs.T
 
     gaps = []
@@ -68,3 +70,21 @@ def run_match(cv_bullets, jd_text, jd_language, threshold, top_n) -> MatchRespon
         coverage_gaps=gaps,
         requirements=requirement_matches
     )
+
+# how to run the server
+# uvicorn src.main:app --reload
+
+# test body
+# {
+#   "cv_bullets": [
+#     "Built REST APIs using FastAPI and PostgreSQL",
+#     "Led a team of 4 engineers on a customer-facing analytics dashboard",
+#     "Wrote unit and integration tests achieving 90% coverage",
+#     "Migrated a legacy monolith to a microservices architecture",
+#     "Mentored junior developers on Python best practices"
+#   ],
+#   "jd_text": "私たちはPythonとFastAPIを使ったバックエンド開発の経験があるエンジニアを探しています。チームリーダーとしての経験があれば尚可です。自動テストの経験も重視します。マイクロサービスアーキテクチャの知識があると有利です。",
+#   "jd_language": "ja",
+#   "threshold": 0.7,
+#   "top_n": 3
+# }
