@@ -233,6 +233,7 @@ For each one:
 - Why it's needed for this project specifically: [not just what the tool does in general, but why THIS project needs it, tied to features A/B or the architecture]
 - Quick comparison with alternatives: [1-3 sentences on what else could have been used and why this one was picked, e.g. "FastAPI vs Flask: Flask needs a separate library bolted on for validation; FastAPI bakes it in via Pydantic" — this is what lets him picture the tradeoff, not just accept a fait accompli]
 - How it fits into our code: [where in the request/response/data flow this tool's output plugs in, described in prose — what feeds it, what it hands off to next]
+- Beyond this project: describe at least 3 realistic use cases for this tool/package that have nothing to do with naitei-embeddings — common industry usage, other problems it's known for solving. Skip a use case only if it's genuinely no longer relevant (deprecated pattern, etc.), don't pad to hit 3. Also briefly cover other major functionality/methods the package offers beyond what this chapter actually uses, so the user has a working sense of the tool's full surface, not just the slice this project needed.
 - Install: `pip install ...` (or note it's stdlib, no install)
 - Docs: [link]
 - Key methods/classes we'll use, each with a SMALL, SELF-CONTAINED, RUNNABLE usage example that shows the actual call and its output, not just a prose description:
@@ -261,7 +262,7 @@ Occasionally, when a natural candidate exists (not every chapter, use judgment),
 
 ## Your tasks
 
-Every core chapter has three hands-on coding exercises, plus a 4th retrieval-practice exercise from Chapter 3 onward (see "Retrieval callback" below). Exercises 1 and 2 are required; Exercise 3 is ALWAYS included (always authored) but is optional for the user to complete, so he can skip it to keep momentum. Exercise 4, when present, is required (it's short by design, so skipping it isn't necessary). Rules:
+Every core chapter has three hands-on coding exercises, plus a 4th retrieval-practice exercise from Chapter 3 onward (see "Retrieval callback" below), plus a 5th always-optional broader-exploration exercise (see "Beyond this project" below). Exercises 1 and 2 are required; Exercise 3 is ALWAYS included (always authored) but is optional for the user to complete, so he can skip it to keep momentum. Exercise 4, when present, is required (it's short by design, so skipping it isn't necessary). Exercise 5 is always optional to complete. Rules:
 
 - **Anchor every exercise to the chapter's CORE skill** (the concrete competency the chapter teaches; e.g. Chapter 4's core skill is "database operations with vectors"). Exercises drill that skill, and any divergence from it should be MEASURED. An exercise that practices the core skill on a throwaway (e.g. "delete a vector, then re-query to see it gone") is on-target even if it does not advance the product. An exercise that wanders into a tangential tool/concept (e.g. an SQL-composition refactor inside a DB-vectors chapter) is off-target: it is a FALLBACK, used only when there is no core-skill practice left to assign, never the default. Concretely, the Chapter 4 sequence should have felt like insert (Ex1) -> search (Ex2) -> another vector DB operation like delete/update (Ex3), not insert -> search -> SQL refactor.
 - **At least one exercise per chapter must advance the actual project** (features A/B / the FastAPI service), so the guide keeps shipping real functionality.
@@ -277,6 +278,8 @@ Each exercise carries its OWN pitfalls and hints inline (structure below), so th
 - **Exercise 1 (Fixate):** follows the shape of what the chapter's examples already demonstrated — one tool, one pattern, applied directly, not combined with others in a new way. Contains exactly ~2 gaps: small stretches not explicitly shown (a check, an edge case, a minor transformation). Overall feel: easy, with two moments to stop and think.
 - **Exercise 2 (Apply):** requires combining 2+ concepts/tools from the chapter in a way the chapter's own examples didn't already show combined. Contains ~3 gaps, each sitting at a seam between the combined concepts rather than inside a single pattern. Overall feel: noticeably harder than Exercise 1, because the combining itself is the difficulty, not just the individual gaps.
 - **Exercise 3 (Apply, optional to complete):** same shape as Exercise 2 (combine 2+ concepts, ~3 gaps), pitched slightly above it — either one more combination, or gaps that require noticing something (an edge case, a tradeoff) rather than just filling in a step.
+
+**Beyond this project (always-optional 5th exercise).** Draw on the "Beyond this project" use cases from "The tools we're using" to set an exercise on a toy/generic scenario that has nothing to do with naitei-embeddings — something common in industry or useful for his career generally (e.g. if the chapter covers `hashlib`, an exercise might be deduplicating a list of uploaded files by content hash, unrelated to embeddings). This exists purely to broaden exposure to a tool beyond the one slice this project needs; skip it for a chapter if none of its tools have a use case interesting/distinct enough to justify a whole exercise (don't force one). Same "Pitfalls"/"Stuck? Hints" structure as the other exercises, but lighter — this is exploration, not core-skill drilling, so 1-2 gaps at most.
 
 **Retrieval callback (mandatory 4th exercise, from the first chapter that has an earlier chapter sitting 2+ chapters back — i.e. starting at Chapter 3).** Every such chapter has a short, always-required Exercise 4 that makes the user reuse a concept or tool from a non-adjacent earlier chapter (2+ chapters back), with NO refresher text reminding him how it works — just a one-line pointer to which chapter it came from (e.g. "recall Chapter 2's point about X — not re-explained here"). This is retrieval practice: recalling something without it being re-taught is what makes it stick long-term, distinct from Exercises 2/3 which combine THIS chapter's material. Keep it deliberately small: a few lines of code, or a short written answer, never a new feature, and never gapped the way Exercises 1-3 are (0-1 gap at most — this exercise tests memory, not problem-solving). Prefer a chapter/concept the current chapter does NOT already build directly on top of, so it's a genuine cross-reference rather than the reuse the chapter is already doing for its core work. Give it its own short pitfalls line if relevant, but hints are usually unnecessary since the point is unaided recall; if a hint is warranted, it should only be a pointer back to which chapter/section to skim, never the answer itself.
 
@@ -339,6 +342,19 @@ Progressive hints for THIS exercise, gentlest first. Keep the depth proportional
 
 </details>
 
+### Exercise 5 (optional to complete): beyond this project
+
+[Only include when at least one tool from this chapter has a use case worth exploring outside naitei-embeddings (see "Beyond this project" above). A short exercise on a generic/toy scenario, unrelated to the CV/JD matching product, that exercises the tool/package in a different, industry-common way. Omit this section entirely for chapters where nothing warrants it — don't force it.]
+
+**Pitfalls for this exercise:** [as above, optional.]
+
+<details>
+<summary>Stuck? Hints (click to expand)</summary>
+
+[Progressive hints for THIS exercise, same structure as Exercise 1, but lighter — 1-2 gaps at most.]
+
+</details>
+
 ## Common pitfalls (chapter-wide, optional)
 
 [Only cross-cutting gotchas NOT tied to a single exercise (e.g. "always call `register_vector` on every connection", "remember to `commit` after writes"). Keep it short, or omit the section entirely when every pitfall already lives under an exercise.]
@@ -357,6 +373,7 @@ Before moving to Chapter N+1, you should have:
 - [ ] [Concrete deliverable from Exercise 1]
 - [ ] [Concrete deliverable from Exercise 2]
 - [ ] [Concrete deliverable from Exercise 4, when present (retrieval callback)]
+- [ ] [Concrete deliverable from Exercise 5, when present (beyond this project)]
 - [ ] [Any conceptual takeaways the user should have internalized]
 - [ ] Written answer to the "Explain it back" prompt
 - [ ] Code committed to your repo
@@ -391,6 +408,8 @@ The user will work through chapters one at a time. You will generate one chapter
 7. **Track progress at the end of each chapter.** End each chapter with the Checkpoint section listing what the user should have. This is also useful for verification in the next chapter.
 
 8. **Update `guide/concepts-index.md` after finalizing each chapter.** Append one line per new concept/tool the chapter introduced: `- [Concept/tool name] — Chapter N`. This is the lookup you use to pick genuinely non-adjacent material for the next chapter's "Quick recall check" and Exercise 4 retrieval callback, instead of re-skimming every prior chapter from scratch each time.
+
+9. **Written answers (Exercise 4 recall, "Explain it back" prompt) go in `guide/answers.md`.** One running file, appended to as chapters are completed, one section per chapter (`## Chapter N`). Do not create a new file per chapter for this.
 
 ---
 

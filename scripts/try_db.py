@@ -24,8 +24,9 @@ def check_row_count(table_name: str) -> int:
 
 
 provider = get_provider()
-sentence = "Experienced web developer"
+sentence = "Experienced web developer3"
 
+print(check_row_count("job_embeddings"))
 get_or_create_embedding("job_embeddings", sentence, provider)
 print(check_row_count("job_embeddings"))
 
@@ -33,5 +34,8 @@ get_or_create_embedding("job_embeddings", sentence, provider)
 print(check_row_count("job_embeddings"))
 
 provider_mock = get_provider("mock")
+get_or_create_embedding("job_embeddings", sentence, provider_mock)
+print(check_row_count("job_embeddings"))
+
 get_or_create_embedding("job_embeddings", sentence, provider_mock)
 print(check_row_count("job_embeddings"))

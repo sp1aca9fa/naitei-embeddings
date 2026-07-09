@@ -67,5 +67,14 @@ Update this after finalizing every chapter: append one line per new concept/tool
 - Compound cache keys: why model name must be part of the key — Chapter 6
 - Schema evolution: `ALTER TABLE`, compound unique index — Chapter 6
 - Read-then-write races and `ON CONFLICT` — Chapter 6
+- Stacking a list of 1D vectors into a 2D array (`np.array`, `np.vstack`) — Chapter 6
+
+## Chapter 7: Skill Canonicalization
+- Nearest-neighbor lookup against a fixed reference set, with a rejection threshold — Chapter 7
+- Precompute-once-at-startup vs. persistent caching (when each fits) — Chapter 7
+- Threshold tuning as a precision/recall tradeoff — Chapter 7
+- Symmetric vs. asymmetric comparison tasks (contrast with Chapter 2's query/passage prefix) — Chapter 7
+- `json` (stdlib): `json.loads`, `json.dumps`, `Path.read_text` — Chapter 7
+- One vector against a matrix (`matrix @ vec`) and `np.argmax` (including `axis=1` for per-row best match) — Chapter 7
 - `hashlib.sha256(...).hexdigest()` for cache keys — Chapter 6
 - Stacking a list of 1D vectors into a 2D array (`np.array`, `np.vstack`) — Chapter 6

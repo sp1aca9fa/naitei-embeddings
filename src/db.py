@@ -87,6 +87,7 @@ def get_or_create_embedding(table_name: str, text: str, provider: EmbeddingProvi
     """Fetches the vector from the DB or inserts a new entry and returns the vector from the new entry."""
     if table_name not in ID_COLUMNS:
         raise ValueError(f"Unknown table {table_name}")
+    text = text.lower().strip()
     content_hash = text_to_hash(text)
     existing = get_embedding(table_name, content_hash, provider.name)
     if existing is not None:
@@ -119,6 +120,30 @@ def search_embedding(table_name: str, query_vec: np.ndarray, n: int) -> list[tup
             )
             results = cur.fetchall()
             return results
+    finally:
+        conn.close()
+        logger.debug("connection closed")
+
+
+def delete_embedding_by_hash(table_name: str, content_hash: str, model_name: str) -> None:
+    """Searches for hash and model in the specified table and deletes the row."""
+    if table_name not in ID_COLUMNS:
+        raise ValueError(f"Unknown table {table_name}")
+    query = sql.SQL(
+        "DELETE FROM {table} WHERE content_hash = %s AND model_name = %s"
+    ).format(
+        table=sql.Identifier(table_name)
+    )
+    conn = get_connection()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                query,
+                (content_hash, model_name)
+            )
+            conn.commit()
+            if cur.rowcount:
+                logger.info("successfully deleted row")
     finally:
         conn.close()
         logger.debug("connection closed")
